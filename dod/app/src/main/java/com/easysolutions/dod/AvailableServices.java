@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.widget.Toolbar;
 
+import com.easysolutions.dod.complaints.Complaints;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -82,6 +83,11 @@ public class AvailableServices extends AppCompatActivity {
                 Intent intent = new Intent(this, Orders.class);
                 intent.putExtra("phoneNumber", phoneNumber);
                 startActivity(intent);
+                break;
+            case R.id.complaints:
+                Intent i2=new Intent(this, Complaints.class);
+                i2.putExtra("phoneNumber",phoneNumber);
+                startActivity(i2);
                 break;
             default:
                 return false;

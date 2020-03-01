@@ -18,13 +18,13 @@
         tools:layout="@layout/fragment_chats" />
     <fragment
         android:id="@+id/nav_share"
-        android:name="com.dod.DOD_ServiceProviders.ui.share.ShareFragment"
-        android:label="@string/menu_share"
+        android:name="com.dod.DOD_ServiceProviders.ui.totalearnings.EarningFragment"
+        android:label="@string/menu_Total_Eaarnings"
         tools:layout="@layout/fragment_share" />
 
     <fragment
         android:id="@+id/nav_send"
-        android:name="com.dod.DOD_ServiceProviders.ui.send.SendFragment"
+        android:name="com.dod.DOD_ServiceProviders.ui.complaints.ComplaintsFragment"
         android:label="@string/menu_send"
         tools:layout="@layout/fragment_send" />
 </navigation>

@@ -26,8 +26,8 @@
 
             <TextView
                 android:id="@+id/type"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingLeft="20dp"
                 android:paddingTop="10dp"
@@ -35,6 +35,16 @@
                 android:textAlignment="gravity"
                 android:textColor="#FFEB3B"
                 android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/bill"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Bill : "
+                android:textColor="#76FF03"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -103,20 +113,35 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="5dp">
 
             <Button
                 android:id="@+id/completedOrder"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/btndesign2"
+                android:text="@string/accept"
+                android:textColor="#F7F7F7"
+                android:textSize="24sp" />
+
+            <Button
+                android:id="@+id/viewbill"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="5dp"
                 android:layout_weight="1"
-                android:backgroundTint="#05B4A3"
-                android:text="@string/markascompleted"
-                android:textColor="#F4F8F8"
+                android:background="@drawable/btndesign2"
+                android:text="View Bill"
+                android:textColor="#F7F7F7"
                 android:textSize="24sp" />
         </LinearLayout>
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

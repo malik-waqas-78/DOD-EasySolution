@@ -22,8 +22,7 @@
             android:layout_margin="5dp"
             android:orientation="vertical"
             android:padding="5dp"
-            app:cardBackgroundColor="#C7EF9D"
-            >
+            app:cardBackgroundColor="#C7EF9D">
 
             <LinearLayout
                 android:layout_width="wrap_content"

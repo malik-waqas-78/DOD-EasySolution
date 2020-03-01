@@ -9,8 +9,7 @@
     android:orientation="vertical"
     android:paddingLeft="30dp"
     android:paddingRight="30dp"
-    android:weightSum="20"
-    >
+    android:weightSum="20">
 
     <ImageView
         android:id="@+id/imageView"
@@ -121,7 +120,6 @@
         android:layout_marginTop="10dp"
         android:layout_weight="1"
         android:visibility="invisible" />
-
 
 
 </LinearLayout>

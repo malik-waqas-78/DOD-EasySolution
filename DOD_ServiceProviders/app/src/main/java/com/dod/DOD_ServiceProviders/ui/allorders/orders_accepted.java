@@ -7,11 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.dod.DOD_ServiceProviders.Dashboard;
 import com.dod.DOD_ServiceProviders.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,12 +27,13 @@ import java.util.ArrayList;
 
 public class orders_accepted extends Fragment {
 
-    ArrayList<Object> orders;
     static DatabaseReference databaseReference;
     static ArrayList<String> types;
+    ArrayList<String> bills=new ArrayList<>();
+    ArrayList<Object> orders;
     ProgressBar progressBar;
-    MyOrdersListViewAdapter myListViewAdapter;
-    ListView listView;
+    Adapter_Accepted myListViewAdapter;
+    RecyclerView listView;
 
     @Nullable
     @Override
@@ -40,34 +45,44 @@ public class orders_accepted extends Fragment {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         orders = new ArrayList<>();
         types = new ArrayList<>();
-        myListViewAdapter = new MyOrdersListViewAdapter(getContext(), orders, R.layout.orders, types);
+        myListViewAdapter = new Adapter_Accepted(container.getContext(), orders, types);
+        LinearLayoutManager layoutManager=new LinearLayoutManager(container.getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        listView.setLayoutManager(layoutManager);
         listView.setAdapter(myListViewAdapter);
-        getOrders();
         return view;
     }
 
     @Override
     public void onResume() {
         progressBar.setVisibility(View.VISIBLE);
+        listView.setVisibility(View.INVISIBLE);
+        getOrders();
         super.onResume();
     }
 
+
+
     public void getOrders() {
 
-        databaseReference.child("ORDERS").child("accepted").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("ORDERS").child("accepted").orderByChild("proNo").equalTo(Dashboard.phoneNumber).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               // Toast.makeText(getContext(), ""+dataSnapshot.getValue(), Toast.LENGTH_SHORT).show();
                 String type;
                 Order_Conveyance conveyance_order;
                 Order_Photocopy photocopy_order;
                 Order_Print print_order;
                 types.clear();
                 orders.clear();
-                //System.out.println("92727 "+dataSnapshot.getChildrenCount());
-                if (dataSnapshot.getChildrenCount() == 0) {
-                    types.add("no order");
-                    orders.add("no_order");
+                Toast.makeText(getContext(), ""+dataSnapshot.getChildrenCount(), Toast.LENGTH_SHORT).show();
+                System.out.println("92727 "+dataSnapshot.getChildrenCount());
+                if (dataSnapshot.getChildrenCount() == 0||(!dataSnapshot.exists())||dataSnapshot==null) {
+                    types.add("0");
+                    orders.add("0");
+                    Toast.makeText(getContext(), "No order1", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
+                    listView.setVisibility(View.VISIBLE);
                     myListViewAdapter.notifyDataSetChanged();
                     return;
                 }
@@ -82,7 +97,6 @@ public class orders_accepted extends Fragment {
                         types.add(type);
                     } else if (type.equals("photocopy")) {
                         photocopy_order = obj.getValue(Order_Photocopy.class);
-
                         orders.add(photocopy_order);
                         types.add(type);
                     } else if (type.equals("print")) {
@@ -91,7 +105,13 @@ public class orders_accepted extends Fragment {
                         types.add(type);
                     }
                 }
+                if(types.size()==0){
+                    types.add("0");
+                    orders.add("0");
+                    Toast.makeText(getContext(), "No order2", Toast.LENGTH_SHORT).show();
+                }
                 progressBar.setVisibility(View.GONE);
+                listView.setVisibility(View.VISIBLE);
                 myListViewAdapter.notifyDataSetChanged();
             }
 

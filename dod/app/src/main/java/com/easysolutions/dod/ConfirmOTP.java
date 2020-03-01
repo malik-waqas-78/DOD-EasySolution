@@ -104,6 +104,7 @@ public class ConfirmOTP extends AppCompatActivity {
                 //Login to main page
                 mDatabase=FirebaseDatabase.getInstance().getReference();
                 mDatabase.child("USERS").child(phoneNumber).child("password").setValue(password);
+                name.toUpperCase();
                 mDatabase.child("USERS").child(phoneNumber).child("name").setValue(name);
                 //showPopup("Admin","ok"+phoneNumber+password);
                 mDatabase.child("OTP").child(phoneNumber).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {

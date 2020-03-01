@@ -1,4 +1,19 @@
 <resources>
+
+
+
+    <array name="orstatus">
+        <item>Seletct order Status</item>
+        <!--        <item>Pending</item>-->
+        <item>Accepted</item>
+        <item>Completed</item>
+    </array>
+    <array name="orno">
+        <item>Select Order No</item>
+    </array>
+
+
+
     <string name="app_name">DOD-Easy Solutions</string>
     <string name="Mobile_Number">Mobile Number</string>
     <string name="password">Password</string>
@@ -52,4 +67,11 @@
     <string name="deleteorder">Delete</string>
     <string name="progressActivityEmptyTitlePlaceholderC">No completed Order</string>
     <string name="progressActivityEmptyContentPlaceholderC">Your order is not completed yet. Plz wait</string>
+    <string name="accept">Accept</string>
+    <string name="enter_your_complaint">Enter Your Complaint</string>
+    <string name="submit">Submit</string>
+    <string name="textview2">TextView</string>
+    <string name="textview3">TextView</string>
+    <string name="textview4">TextView</string>
+    <string name="todo">TODO</string>
 </resources>

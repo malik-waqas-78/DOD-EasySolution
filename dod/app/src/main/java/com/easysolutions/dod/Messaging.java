@@ -13,6 +13,7 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,7 +45,9 @@ public class Messaging extends AppCompatActivity {
         cusNo=intent.getStringExtra("proNo");
         proNo=intent.getStringExtra("cusNo");
         id=intent.getStringExtra("idNo");
-        getSupportActionBar().setTitle(cusName);
+        Toolbar toolbar=findViewById(R.id.toolbar);
+        toolbar.setTitle(cusName);
+
         databaseReference= FirebaseDatabase.getInstance().getReference();
         calendar=Calendar.getInstance();
         listView=findViewById(R.id.msg_listview);

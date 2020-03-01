@@ -19,8 +19,11 @@ import com.easysolutions.dod.Order_Conveyance;
 import com.easysolutions.dod.Order_Photocopy;
 import com.easysolutions.dod.Order_Print;
 import com.easysolutions.dod.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -37,8 +40,8 @@ public class Accepted_Adapter extends RecyclerView.Adapter {
 
     public static class Accepted_Orders_View extends RecyclerView.ViewHolder {
 
-        TextView ordrNO, orderType, textside1, textSide2, timeNdate;
-        Button completed;
+        TextView ordrNO, orderType, textside1, textSide2, timeNdate,bill;
+        Button completed,viewbill;
         ProgressBar progressBar;
 
         public Accepted_Orders_View(@NonNull View itemView) {
@@ -49,6 +52,8 @@ public class Accepted_Adapter extends RecyclerView.Adapter {
             textside1 = itemView.findViewById(R.id.textside1);
             textSide2 = itemView.findViewById(R.id.textside2);
             timeNdate = itemView.findViewById(R.id.timendate);
+            bill=itemView.findViewById(R.id.bill);
+            viewbill=itemView.findViewById(R.id.viewbill);
             completed = itemView.findViewById(R.id.completedOrder);
         }
     }
@@ -102,9 +107,15 @@ public class Accepted_Adapter extends RecyclerView.Adapter {
             case 1:
                 //pending order details
                 ind = position;
+                String orderno="";
                 this.progressBar = ((Accepted_Orders_View) holder).progressBar;
                 if (aTypes.get(position).equals("conveyance")) {
                     final Order_Conveyance conveyance_order = (Order_Conveyance) aOrders.get(position);
+                    orderno=conveyance_order.getOrder_no();
+                    if(conveyance_order.getBill()!=null)
+                    ((Accepted_Orders_View)holder).bill.setText("Bill : "+conveyance_order.getBill()+" Rs");
+                    else
+                        ((Accepted_Orders_View)holder).bill.setText("Bill : 0 Rs");
                     ((Accepted_Orders_View) holder).orderType.setText("Conveyance Order");
                     ((Accepted_Orders_View) holder).ordrNO.setText("ID: " + conveyance_order.getOrder_no());
                     ((Accepted_Orders_View) holder).timeNdate.setText(conveyance_order.getTime() + "\n" + conveyance_order.getDate());
@@ -124,6 +135,11 @@ public class Accepted_Adapter extends RecyclerView.Adapter {
 
                 } else if (aTypes.get(position).equals("print")) {
                     final Order_Print print_order = (Order_Print) aOrders.get(position);
+                    orderno=print_order.getOrder_no();
+                    if(print_order.getBill()!=null)
+                    ((Accepted_Orders_View)holder).bill.setText("Bill : "+print_order.getBill()+" Rs");
+                    else
+                        ((Accepted_Orders_View)holder).bill.setText("Bill : 0 Rs");
                     ((Accepted_Orders_View) holder).orderType.setText("Print");
                     ((Accepted_Orders_View) holder).ordrNO.setText("ID: " + print_order.getOrder_no());
                     ((Accepted_Orders_View) holder).textside1.setText("No of Pages:" + "\n" + print_order.getNo_of_Pages() +
@@ -144,6 +160,11 @@ public class Accepted_Adapter extends RecyclerView.Adapter {
                     });
                 } else if (aTypes.get(position).equals("photocopy")) {
                     final Order_Photocopy photocopy_order = (Order_Photocopy) aOrders.get(position);
+                    orderno=photocopy_order.getOrderno();
+                    if(photocopy_order.getBill()!=null)
+                    ((Accepted_Orders_View)holder).bill.setText("Bill : "+photocopy_order.getBill()+" Rs");
+                    else
+                        ((Accepted_Orders_View)holder).bill.setText("Bill : 0 Rs");
                     ((Accepted_Orders_View) holder).orderType.setText("Photocopy");
                     ((Accepted_Orders_View) holder).ordrNO.setText("ID: " + photocopy_order.getOrderno());
                     ((Accepted_Orders_View) holder).textside1.setText("No of Pages:" + "\n" + photocopy_order.getNo_of_pages() +
@@ -158,6 +179,50 @@ public class Accepted_Adapter extends RecyclerView.Adapter {
                         @Override
                         public void onClick(View view) {
                             showPopup("Complete Order", "Do you want to Mark your order as Completed?", photocopy_order);
+                        }
+                    });
+                }
+
+                if(!orderno.equals("")) {
+                    final String finalOrderno = orderno;
+                    ((Accepted_Orders_View) holder).viewbill.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            databaseReference.child("BILL").child(finalOrderno).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (!dataSnapshot.exists() || dataSnapshot.getChildrenCount() == 0) {
+                                        showSimplePopup("Bill Details", "Bill is Not submitted yet.");
+                                        return;
+                                    }
+                                    String type = dataSnapshot.child("type").getValue().toString();
+                                    if (type.equals("cony")) {
+                                        Bill_Conveyance bill_conveyance = dataSnapshot.getValue(Bill_Conveyance.class);
+                                        String billdetails = "Fair : " + bill_conveyance.getFair() + "\n" +
+                                                "Driver Name : " + bill_conveyance.getDriver_name();
+                                        showSimplePopup("Bill Details", billdetails);
+                                    } else if (type.equals("print")) {
+                                        Bill_Printing bill_printing = dataSnapshot.getValue(Bill_Printing.class);
+                                        String billdetails = "Total Bill : " + bill_printing.getTotalbill() + "\n" +
+                                                "DoD Charges : " + bill_printing.getDodcharges() + "\n" +
+                                                "Your Earnings : " + bill_printing.getProcharges() + "\n" +
+                                                "Expances : " + bill_printing.ExpendeturesEarnings();
+                                        showSimplePopup("Bill Details", billdetails);
+                                    } else if (type.equals("copy")) {
+                                        Bill_Copying bill_copying = dataSnapshot.getValue(Bill_Copying.class);
+                                        String billdetails = "Total Bill : " + bill_copying.getTotalbill() + "\n" +
+                                                "DoD Charges : " + bill_copying.getDodcharges() + "\n" +
+                                                "Your Earnings : " + bill_copying.getProcharges() + "\n" +
+                                                "Expances : " + bill_copying.ExpendeturesEarnings();
+                                        showSimplePopup("Bill Details", billdetails);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
                         }
                     });
                 }
@@ -264,51 +329,109 @@ public class Accepted_Adapter extends RecyclerView.Adapter {
 
     }
 
-    public void Complete_Order_conveyance(Order_Conveyance conveyance_order) {
-        conveyance_order.setStatus("completed");
-        progressBar.setVisibility(View.VISIBLE);
-        Log.d(TAG, "Complete_Order_conveyance: "+conveyance_order.getOrder_no());
-        databaseReference.child("ORDERS").child("List").child(conveyance_order.getOrder_no()).
-                child("status").setValue("completed");
-        databaseReference.child("ORDERS").child("accepted").child(conveyance_order.getOrder_no()).removeValue();
-        databaseReference.child("ORDERS").child("completed")
-                .child(conveyance_order.getOrder_no()).setValue(conveyance_order);
-        progressBar.setVisibility(View.GONE);
-        aOrders.remove(ind);
-        notifyDataSetChanged();
-        showSimplePopup("Message", "Your Order has been Completed.");
+    public void Complete_Order_conveyance(final Order_Conveyance conveyance_order) {
+
+        databaseReference.child("BILL").child(conveyance_order.getOrder_no())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    conveyance_order.setStatus("completed");
+                    progressBar.setVisibility(View.VISIBLE);
+                    Log.d(TAG, "Complete_Order_conveyance: "+conveyance_order.getOrder_no());
+                    databaseReference.child("ORDERS").child("List").child(conveyance_order.getOrder_no()).
+                            child("status").setValue("completed");
+                    databaseReference.child("ORDERS").child("accepted").child(conveyance_order.getOrder_no()).removeValue();
+                    databaseReference.child("ORDERS").child("completed")
+                            .child(conveyance_order.getOrder_no()).setValue(conveyance_order);
+                    progressBar.setVisibility(View.GONE);
+                    Bill_Conveyance bill_conveyance=dataSnapshot.getValue(Bill_Conveyance.class);
+                    String fiar="Fair : " +bill_conveyance.getFair();
+                    String drivername="\nDriver Name : "+bill_conveyance.getDriver_name();
+                    showSimplePopup("Bill Details", fiar+drivername
+                            +"\n\"Your Order has been Marked as Completed.\"");
+                }else{
+                    showSimplePopup("Message", "Your Order is not Completed yet.");
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 //        Orders.refresh();
         //this.notifyDataSetChanged();
 
     }
 
-    public void Complete_order_print(Order_Print print_order) {
-        print_order.setStatus("completed");
-        progressBar.setVisibility(View.VISIBLE);
-        databaseReference.child("ORDERS").child("List").child(print_order.getOrder_no()).
-                child("status").setValue("completed");
-        databaseReference.child("ORDERS").child("accepted").child(print_order.getOrder_no()).removeValue();
-        databaseReference.child("ORDERS").child("completed")
-                .child(print_order.getOrder_no()).setValue(print_order);
-        progressBar.setVisibility(View.GONE);
-        aOrders.remove(ind);
-        notifyDataSetChanged();
-        showSimplePopup("Message", "Your Order has been Completed.");
-//        Orders.refresh();
+    public void Complete_order_print(final Order_Print print_order) {
+
+        databaseReference.child("BILL").child(print_order.getOrder_no())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()){
+                            print_order.setStatus("completed");
+                            progressBar.setVisibility(View.VISIBLE);
+                            databaseReference.child("ORDERS").child("List").child(print_order.getOrder_no()).
+                                    child("status").setValue("completed");
+                            databaseReference.child("ORDERS").child("accepted").child(print_order.getOrder_no()).removeValue();
+                            databaseReference.child("ORDERS").child("completed")
+                                    .child(print_order.getOrder_no()).setValue(print_order);
+                            progressBar.setVisibility(View.GONE);
+                            Bill_Printing bill_printing=dataSnapshot.getValue(Bill_Printing.class);
+                            String priceP="Printing Expances : " +bill_printing.getPrintingprice();
+                            String totalBill="\nTotal Bill : "+bill_printing.getTotalbill();
+                            showSimplePopup("Bill Details", priceP+totalBill
+                                    +"\n\"Your Order has been Marked as Completed.\"");
+                        }else{
+                            showSimplePopup("Message", "Your Order is not Completed yet.");
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 
-    public void Complete_order_Photocopy(Order_Photocopy photocopy_order) {
-        photocopy_order.setStatus("completed");
-        progressBar.setVisibility(View.VISIBLE);
-        databaseReference.child("ORDERS").child("List").child(photocopy_order.getOrderno()).
-                child("status").setValue("completed");
-        databaseReference.child("ORDERS").child("accepted").child(photocopy_order.getOrderno()).removeValue();
-        databaseReference.child("ORDERS").child("completed")
-                .child(photocopy_order.getOrderno()).setValue(photocopy_order);
-        progressBar.setVisibility(View.GONE);
-        aOrders.remove(ind);
-        notifyDataSetChanged();
-        showSimplePopup("Message", "Your Order has been Completed.");
+    public void Complete_order_Photocopy(final Order_Photocopy photocopy_order) {
+        databaseReference.child("BILL").child(photocopy_order.getOrderno())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()){
+                            photocopy_order.setStatus("completed");
+                            progressBar.setVisibility(View.VISIBLE);
+                            databaseReference.child("ORDERS").child("List").child(photocopy_order.getOrderno()).
+                                    child("status").setValue("completed");
+                            databaseReference.child("ORDERS").child("accepted").child(photocopy_order.getOrderno()).removeValue();
+                            databaseReference.child("ORDERS").child("completed")
+                                    .child(photocopy_order.getOrderno()).setValue(photocopy_order);
+                            progressBar.setVisibility(View.GONE);
+                            Bill_Copying bill_copying=dataSnapshot.getValue(Bill_Copying.class);
+                            String priceC="Copying Expances : " +bill_copying.getCopyingprice();
+                            String totalBill="\nTotal Bill : "+bill_copying.getTotalbill();
+                            showSimplePopup("Bill Details", priceC+totalBill
+                                    +"\n\"Your Order has been Marked as Completed.\"");
+                        }else{
+                            showSimplePopup("Message", "Order is not Completed yet.");
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
 //        Orders.refresh();
     }
 }

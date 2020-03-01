@@ -12,12 +12,18 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".complaints.Complaints"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
         <activity
             android:name=".Orders"
             android:label="@string/title_activity_orders"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".Chat_Threads" />
-        <activity android:name=".Messaging" />
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Chat_Threads"
+            android:label="Messages"
+            android:theme="@style/AppTheme.chat" />
+        <activity android:name=".complaints.MessagingChat" android:theme="@style/AppTheme.chat"></activity>
+        <activity android:name=".Messaging" android:theme="@style/AppTheme.chat"/>
         <activity
             android:name=".AvailableServices"
             android:label="@string/title_activity_available_services"

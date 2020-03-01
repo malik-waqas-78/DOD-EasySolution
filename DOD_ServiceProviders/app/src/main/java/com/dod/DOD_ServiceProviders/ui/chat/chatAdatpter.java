@@ -7,11 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 
-import com.dod.DOD_ServiceProviders.Messaging;
 import com.dod.DOD_ServiceProviders.R;
 
 import java.util.ArrayList;
@@ -47,26 +45,26 @@ public class chatAdatpter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        if(view==null){
-            view=layoutInflater.inflate(layout, viewGroup, false);
-            TextView id,name,time;
-            id=view.findViewById(R.id.order_id);
-            name=view.findViewById(R.id.cus_name);
-            time=view.findViewById(R.id.time);
-            final List_Row row=listRows.get(i);
+        if (view == null) {
+            view = layoutInflater.inflate(layout, viewGroup, false);
+            TextView id, name, time;
+            id = view.findViewById(R.id.order_id);
+            name = view.findViewById(R.id.cus_name);
+            time = view.findViewById(R.id.time);
+            final List_Row row = listRows.get(i);
             id.setText(row.getId());
             name.setText(row.getName());
             time.setText(row.getTime());
-            CardView cardView=view.findViewById(R.id.chat_cardview);
+            CardView cardView = view.findViewById(R.id.chat_cardview);
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //DO NEXT THING
-                    Intent intent=new Intent(context, Messaging.class);
-                    intent.putExtra("cusName",row.getName());
-                    intent.putExtra("cusNo",row.getCusNo());
-                    intent.putExtra("proNo",row.getProNo());
-                    intent.putExtra("idNo",row.getId());
+                    Intent intent = new Intent(context, Messaging.class);
+                    intent.putExtra("cusName", row.getName());
+                    intent.putExtra("cusNo", row.getCusNo());
+                    intent.putExtra("proNo", row.getProNo());
+                    intent.putExtra("idNo", row.getId());
                     context.startActivity(intent);
                     //Toast.makeText(context, "selected card view", Toast.LENGTH_SHORT).show();
                 }

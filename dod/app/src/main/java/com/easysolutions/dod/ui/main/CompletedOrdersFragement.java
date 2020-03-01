@@ -66,6 +66,9 @@ public class CompletedOrdersFragement extends Fragment {
                 if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() != 0 && dataSnapshot != null) {
                     for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                         Log.d(TAG, "found "+snapshot.getValue());
+                        if(snapshot.child("cusVis").exists()&&snapshot.child("cusVis").getValue().equals("false")){
+                            continue;
+                        }
                         String type;
                         type = snapshot.child("type").getValue().toString();
                         if (type.equals("conveyance")) {
@@ -85,8 +88,13 @@ public class CompletedOrdersFragement extends Fragment {
                     }
                     adapter.notifyDataSetChanged();
 
-                } else {
-                    Log.d(TAG, "onChildAdded: ");
+                } else{
+                    Log.d(TAG, "onChildadded: ");
+                    cOrders.add("0");
+                    adapter.notifyDataSetChanged();
+                }
+                if(cOrders.size()==0) {
+                    Log.d(TAG, "onChild false: ");
                     cOrders.add("0");
                     adapter.notifyDataSetChanged();
                 }

@@ -1,23 +1,80 @@
 package com.easysolutions.dod;
 
 public class Order_Print {
-    String no_of_Pages,no_of_Prints,page_Color,pickup_Time,pickup_Point,url,file_add,extra_details,current_Time_milies,status,type;
-    String time,order_no,date,cusNo,name;
+    String no_of_Pages, no_of_Prints, page_Color, pickup_Time, pickup_Point, url, file_add, extra_details, current_Time_milies, status, type;
+    String time, order_no, date, cusNo, name,proNo,bill,cusVis,proVis;
 
-    public String getCusNo() {
-        return cusNo;
+    public String getCusVis() {
+        return cusVis;
     }
 
-    public void setCusNo(String cusNo) {
+    public void setCusVis(String cusVis) {
+        this.cusVis = cusVis;
+    }
+
+    public String getProVis() {
+        return proVis;
+    }
+
+    public void setProVis(String proVis) {
+        this.proVis = proVis;
+    }
+
+    public Order_Print(String no_of_Pages, String no_of_Prints, String page_Color, String pickup_Time, String pickup_Point, String url, String file_add, String extra_details, String current_Time_milies, String status, String type, String time, String order_no, String date, String cusNo, String name, String proNo, String bill) {
+        this.no_of_Pages = no_of_Pages;
+        this.no_of_Prints = no_of_Prints;
+        this.page_Color = page_Color;
+        this.pickup_Time = pickup_Time;
+        this.pickup_Point = pickup_Point;
+        this.url = url;
+        this.file_add = file_add;
+        this.extra_details = extra_details;
+        this.current_Time_milies = current_Time_milies;
+        this.status = status;
+        this.type = type;
+        this.time = time;
+        this.order_no = order_no;
+        this.date = date;
         this.cusNo = cusNo;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
         this.name = name;
+        this.proNo = proNo;
+        this.bill = bill;
+    }
+
+    public String getBill() {
+        return bill;
+    }
+
+    public void setBill(String bill) {
+        this.bill = bill;
+    }
+
+    public Order_Print(String no_of_Pages, String no_of_Prints, String page_Color, String pickup_Time, String pickup_Point, String url, String file_add, String extra_details, String current_Time_milies, String status, String type, String time, String order_no, String date, String cusNo, String name, String proNo) {
+        this.no_of_Pages = no_of_Pages;
+        this.no_of_Prints = no_of_Prints;
+        this.page_Color = page_Color;
+        this.pickup_Time = pickup_Time;
+        this.pickup_Point = pickup_Point;
+        this.url = url;
+        this.file_add = file_add;
+        this.extra_details = extra_details;
+        this.current_Time_milies = current_Time_milies;
+        this.status = status;
+        this.type = type;
+        this.time = time;
+        this.order_no = order_no;
+        this.date = date;
+        this.cusNo = cusNo;
+        this.name = name;
+        this.proNo = proNo;
+    }
+
+    public String getProNo() {
+        return proNo;
+    }
+
+    public void setProNo(String proNo) {
+        this.proNo = proNo;
     }
 
     public Order_Print(String no_of_Pages, String no_of_Prints, String page_Color, String pickup_Time, String pickup_Point, String url, String file_add, String extra_details, String current_Time_milies, String status, String type, String time, String order_no, String date, String cusNo, String name) {
@@ -57,6 +114,25 @@ public class Order_Print {
         this.time = time;
         this.order_no = order_no;
         this.date = date;
+    }
+
+    public Order_Print() {
+    }
+
+    public String getCusNo() {
+        return cusNo;
+    }
+
+    public void setCusNo(String cusNo) {
+        this.cusNo = cusNo;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCurrent_Time_milies() {
@@ -106,12 +182,6 @@ public class Order_Print {
     public void setType(String type) {
         this.type = type;
     }
-
-
-    public Order_Print() {
-    }
-
-
 
     public String getNo_of_Pages() {
         return no_of_Pages;

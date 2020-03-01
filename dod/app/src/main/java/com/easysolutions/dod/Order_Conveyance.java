@@ -1,11 +1,80 @@
 package com.easysolutions.dod;
 
-import android.content.Intent;
-
 public class Order_Conveyance {
-    String pickup_point,drop_Point,transport_Type,seats,pickup_Time,pickup_Date,extr_Details,current_Time_milies,status,type;
+    String pickup_point, drop_Point, transport_Type, seats, pickup_Time, pickup_Date, extr_Details, current_Time_milies, status, type;
 
-    String time,date,order_no,cusNo,name;
+    String time, date, order_no, cusNo, name,proNo,bill,cusVis,proVis;
+
+    public String getBill() {
+        return bill;
+    }
+
+    public String getCusVis() {
+        return cusVis;
+    }
+
+    public void setCusVis(String cusVis) {
+        this.cusVis = cusVis;
+    }
+
+    public String getProVis() {
+        return proVis;
+    }
+
+    public void setProVis(String proVis) {
+        this.proVis = proVis;
+    }
+
+    public Order_Conveyance(String pickup_point, String drop_Point, String transport_Type, String seats, String pickup_Time, String pickup_Date, String extr_Details, String current_Time_milies, String status, String type, String time, String date, String order_no, String cusNo, String name, String proNo, String bill) {
+        this.pickup_point = pickup_point;
+        this.drop_Point = drop_Point;
+        this.transport_Type = transport_Type;
+        this.seats = seats;
+        this.pickup_Time = pickup_Time;
+        this.pickup_Date = pickup_Date;
+        this.extr_Details = extr_Details;
+        this.current_Time_milies = current_Time_milies;
+        this.status = status;
+        this.type = type;
+        this.time = time;
+        this.date = date;
+        this.order_no = order_no;
+        this.cusNo = cusNo;
+        this.name = name;
+        this.proNo = proNo;
+        this.bill = bill;
+    }
+
+    public void setBill(String bill) {
+        this.bill = bill;
+    }
+
+    public Order_Conveyance(String pickup_point, String drop_Point, String transport_Type, String seats, String pickup_Time, String pickup_Date, String extr_Details, String current_Time_milies, String status, String type, String time, String date, String order_no, String cusNo, String name, String proNo) {
+        this.pickup_point = pickup_point;
+        this.drop_Point = drop_Point;
+        this.transport_Type = transport_Type;
+        this.seats = seats;
+        this.pickup_Time = pickup_Time;
+        this.pickup_Date = pickup_Date;
+        this.extr_Details = extr_Details;
+        this.current_Time_milies = current_Time_milies;
+        this.status = status;
+        this.type = type;
+        this.time = time;
+        this.date = date;
+        this.order_no = order_no;
+        this.cusNo = cusNo;
+        this.name = name;
+        this.proNo = proNo;
+    }
+
+    public String getProNo() {
+        return proNo;
+    }
+
+    public void setProNo(String proNo) {
+        this.proNo = proNo;
+    }
 
     public Order_Conveyance(String pickup_point, String drop_Point, String transport_Type, String seats, String pickup_Time, String pickup_Date, String extr_Details, String current_Time_milies, String status, String type, String time, String date, String order_no, String cusNo, String name) {
         this.pickup_point = pickup_point;
@@ -41,6 +110,10 @@ public class Order_Conveyance {
         this.time = time;
         this.date = date;
         this.order_no = order_no;
+    }
+
+    public Order_Conveyance() {
+
     }
 
     public String getCusNo() {
@@ -107,12 +180,6 @@ public class Order_Conveyance {
         this.type = type;
     }
 
-
-
-    public Order_Conveyance(){
-
-    }
-
     public String getPickup_point() {
         return pickup_point;
     }
@@ -171,24 +238,24 @@ public class Order_Conveyance {
     }
 
     public boolean validate() {
-        if(pickup_Date!=null&&pickup_Time!=null&&(!pickup_Date.equalsIgnoreCase("Pickup Date"))&&(!pickup_point.isEmpty())
-                &&(!pickup_Time.equalsIgnoreCase("PickUp Time"))&&(!seats.isEmpty())
-                &&(!drop_Point.isEmpty())&&validateSeats()){
+        if (pickup_Date != null && pickup_Time != null && (!pickup_Date.equalsIgnoreCase("Pickup Date")) && (!pickup_point.isEmpty())
+                && (!pickup_Time.equalsIgnoreCase("PickUp Time")) && (!seats.isEmpty())
+                && (!drop_Point.isEmpty()) && validateSeats()) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
     private boolean validateSeats() {
-        int no_of_seats=Integer.parseInt(seats);
-        if(transport_Type.equals("Motor Bike")&&no_of_seats<=2&&no_of_seats!=0 ){
+        int no_of_seats = Integer.parseInt(seats);
+        if (transport_Type.equals("Motor Bike") && no_of_seats <= 2 && no_of_seats != 0) {
             return true;
-        }else if(transport_Type.equals("Rikshaw")&&no_of_seats<=6&&no_of_seats!=0){
+        } else if (transport_Type.equals("Rikshaw") && no_of_seats <= 6 && no_of_seats != 0) {
             return true;
-        }else if(transport_Type.equals("Carry Dba")&&no_of_seats<=9&&no_of_seats!=0){
+        } else if (transport_Type.equals("Carry Dba") && no_of_seats <= 9 && no_of_seats != 0) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }

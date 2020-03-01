@@ -1,15 +1,15 @@
 package com.dod.DOD_ServiceProviders;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,19 +22,19 @@ import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
     ProgressBar progressBar;
-    String password,fdbPassword,phoneNumber,name;
-    Button  login;
-    EditText etpass,etphno;
+    String password, fdbPassword, phoneNumber, name;
+    Button login;
+    EditText etpass, etphno;
     DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        progressBar=findViewById(R.id.loading);
-        login=findViewById(R.id.btn_login);
-        etpass=findViewById(R.id.edtxt_password);
-        etphno=findViewById(R.id.edtxt_mobileNumber);
+        progressBar = findViewById(R.id.loading);
+        login = findViewById(R.id.btn_login);
+        etpass = findViewById(R.id.edtxt_password);
+        etphno = findViewById(R.id.edtxt_mobileNumber);
     }
 
     public void confirmLogin(View view) {
@@ -55,14 +55,14 @@ public class LoginActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             fdbPassword = dataSnapshot.child("password").getValue().toString();
-                            name=dataSnapshot.child("name").getValue().toString();
+                            name = dataSnapshot.child("name").getValue().toString();
                             if (fdbPassword.equals(password)) {
                                 login.setEnabled(true);
                                 Intent i = new Intent(LoginActivity.this, Dashboard.class);
                                 i.putExtra("phoneNumber", phoneNumber);
-                                i.putExtra("Name",name);
+                                i.putExtra("Name", name);
                                 startActivity(i);
-                               // showPopup("login","Login Successful");
+                                // showPopup("login","Login Successful");
                                 progressBar.setVisibility(View.INVISIBLE);
                             } else {
                                 progressBar.setVisibility(View.INVISIBLE);

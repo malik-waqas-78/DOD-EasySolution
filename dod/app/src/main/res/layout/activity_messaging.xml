@@ -8,12 +8,22 @@
     tools:context=".Messaging">
 
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:titleTextColor="#FFFFFF" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/msg_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/relativeBottom"
 
+        android:layout_below="@id/toolbar"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
         android:stackFromBottom="true"

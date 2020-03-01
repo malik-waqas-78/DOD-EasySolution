@@ -19,8 +19,11 @@ import com.easysolutions.dod.Order_Conveyance;
 import com.easysolutions.dod.Order_Photocopy;
 import com.easysolutions.dod.Order_Print;
 import com.easysolutions.dod.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -41,8 +44,8 @@ public class Completed_Adapter extends RecyclerView.Adapter {
     }
     public static class Completed_Orders_View extends RecyclerView.ViewHolder {
 
-        TextView ordrNO, orderType, textside1, textSide2, timeNdate;
-        Button delete;
+        TextView ordrNO, orderType, textside1, textSide2, timeNdate,bill;
+        Button delete,viewbill;
         ProgressBar progressBar;
 
         public Completed_Orders_View(@NonNull View itemView) {
@@ -53,6 +56,8 @@ public class Completed_Adapter extends RecyclerView.Adapter {
             textside1 = itemView.findViewById(R.id.textside1);
             textSide2 = itemView.findViewById(R.id.textside2);
             timeNdate = itemView.findViewById(R.id.timendate);
+            viewbill=itemView.findViewById(R.id.viewbill);
+            bill=itemView.findViewById(R.id.bill);
             delete = itemView.findViewById(R.id.deleteOrder);
         }
     }
@@ -96,9 +101,12 @@ public class Completed_Adapter extends RecyclerView.Adapter {
             case 1:
                 //pending order details
                 ind = position;
+                String orderno="";
                 this.progressBar = ((Completed_Orders_View) holder).progressBar;
                 if (cTypes.get(position).equals("conveyance")) {
                     final Order_Conveyance conveyance_order = (Order_Conveyance) cOrders.get(position);
+                    orderno=conveyance_order.getOrder_no();
+                    ((Completed_Orders_View) holder).bill.setText("Bills : "+conveyance_order.getBill()+" Rs");
                     ((Completed_Orders_View) holder).orderType.setText("Conveyance Order");
                     ((Completed_Orders_View) holder).ordrNO.setText("ID: " + conveyance_order.getOrder_no());
                     ((Completed_Orders_View) holder).timeNdate.setText(conveyance_order.getTime() + "\n" + conveyance_order.getDate());
@@ -118,6 +126,8 @@ public class Completed_Adapter extends RecyclerView.Adapter {
 
                 } else if (cTypes.get(position).equals("print")) {
                     final Order_Print print_order = (Order_Print) cOrders.get(position);
+                    orderno=print_order.getOrder_no();
+                    ((Completed_Orders_View) holder).bill.setText("Bill : "+print_order.getBill()+" Rs" );
                     ((Completed_Orders_View) holder).orderType.setText("Print");
                     ((Completed_Orders_View) holder).ordrNO.setText("ID: " + print_order.getOrder_no());
                     ((Completed_Orders_View) holder).textside1.setText("No of Pages:" + "\n" + print_order.getNo_of_Pages() +
@@ -138,6 +148,8 @@ public class Completed_Adapter extends RecyclerView.Adapter {
                     });
                 } else if (cTypes.get(position).equals("photocopy")) {
                     final Order_Photocopy photocopy_order = (Order_Photocopy) cOrders.get(position);
+                    orderno=photocopy_order.getOrderno();
+                    ((Completed_Orders_View) holder).bill.setText("Bills : "+photocopy_order.getBill()+" Rs");
                     ((Completed_Orders_View) holder).orderType.setText("Photocopy");
                     ((Completed_Orders_View) holder).ordrNO.setText("ID: " + photocopy_order.getOrderno());
                     ((Completed_Orders_View) holder).textside1.setText("No of Pages:" + "\n" + photocopy_order.getNo_of_pages() +
@@ -152,6 +164,50 @@ public class Completed_Adapter extends RecyclerView.Adapter {
                         @Override
                         public void onClick(View view) {
                             showPopup("Delete Order", "Do you want to delete order details permanently?", photocopy_order);
+                        }
+                    });
+                }
+
+                if(!orderno.equals("")) {
+                    final String finalOrderno = orderno;
+                    ((Completed_Orders_View) holder).viewbill.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            databaseReference.child("BILL").child(finalOrderno).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (!dataSnapshot.exists() || dataSnapshot.getChildrenCount() == 0) {
+                                        showSimplePopup("Bill Details", "Bill is Not submitted yet.");
+                                        return;
+                                    }
+                                    String type = dataSnapshot.child("type").getValue().toString();
+                                    if (type.equals("cony")) {
+                                        Bill_Conveyance bill_conveyance = dataSnapshot.getValue(Bill_Conveyance.class);
+                                        String billdetails = "Fair : " + bill_conveyance.getFair() + "\n" +
+                                                "Driver Name : " + bill_conveyance.getDriver_name();
+                                        showSimplePopup("Bill Details", billdetails);
+                                    } else if (type.equals("print")) {
+                                        Bill_Printing bill_printing = dataSnapshot.getValue(Bill_Printing.class);
+                                        String billdetails = "Total Bill : " + bill_printing.getTotalbill() + "\n" +
+                                                "DoD Charges : " + bill_printing.getDodcharges() + "\n" +
+                                                "Your Earnings : " + bill_printing.getProcharges() + "\n" +
+                                                "Expances : " + bill_printing.ExpendeturesEarnings();
+                                        showSimplePopup("Bill Details", billdetails);
+                                    } else if (type.equals("copy")) {
+                                        Bill_Copying bill_copying = dataSnapshot.getValue(Bill_Copying.class);
+                                        String billdetails = "Total Bill : " + bill_copying.getTotalbill() + "\n" +
+                                                "DoD Charges : " + bill_copying.getDodcharges() + "\n" +
+                                                "Your Earnings : " + bill_copying.getProcharges() + "\n" +
+                                                "Expances : " + bill_copying.ExpendeturesEarnings();
+                                        showSimplePopup("Bill Details", billdetails);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
                         }
                     });
                 }
@@ -259,16 +315,13 @@ public class Completed_Adapter extends RecyclerView.Adapter {
     }
 
     public void Delete_Order_conveyance(Order_Conveyance conveyance_order) {
-        conveyance_order.setStatus("deleted");
+        conveyance_order.setCusVis("false");
         progressBar.setVisibility(View.VISIBLE);
-        databaseReference.child("ORDERS").child("List").child(conveyance_order.getOrder_no()).
-                child("status").setValue("deleted");
-        databaseReference.child("ORDERS").child("completed").child(conveyance_order.getOrder_no()).removeValue();
-        databaseReference.child("ORDERS").child("deleted")
+        databaseReference.child("ORDERS").child("completed")
                 .child(conveyance_order.getOrder_no()).setValue(conveyance_order);
+        databaseReference.child("ORDERS").child("List")
+                .child(conveyance_order.getOrder_no()).child("cusVis").setValue("false");
         progressBar.setVisibility(View.GONE);
-        cOrders.remove(ind);
-        notifyDataSetChanged();
         showSimplePopup("Message", "Your Order has been Deleted.");
 //        Orders.refresh();
         //this.notifyDataSetChanged();
@@ -276,31 +329,26 @@ public class Completed_Adapter extends RecyclerView.Adapter {
     }
 
     public void Delete_order_print(Order_Print print_order) {
-        print_order.setStatus("deleted");
+
+        print_order.setCusVis("false");
         progressBar.setVisibility(View.VISIBLE);
-        databaseReference.child("ORDERS").child("List").child(print_order.getOrder_no()).
-                child("status").setValue("deleted");
-        databaseReference.child("ORDERS").child("completed").child(print_order.getOrder_no()).removeValue();
-        databaseReference.child("ORDERS").child("deleted")
+        databaseReference.child("ORDERS").child("completed")
                 .child(print_order.getOrder_no()).setValue(print_order);
+        databaseReference.child("ORDERS").child("List")
+                .child(print_order.getOrder_no()).child("cusVis").setValue("false");
         progressBar.setVisibility(View.GONE);
-        cOrders.remove(ind);
-        notifyDataSetChanged();
         showSimplePopup("Message", "Your Order has been Deleted.");
 //        Orders.refresh();
     }
 
     public void Delete_order_Photocopy(Order_Photocopy photocopy_order) {
-        photocopy_order.setStatus("deleted");
+        photocopy_order.setCusVis("false");
         progressBar.setVisibility(View.VISIBLE);
-        databaseReference.child("ORDERS").child("List").child(photocopy_order.getOrderno()).
-                child("status").setValue("deleted");
-        databaseReference.child("ORDERS").child("completed").child(photocopy_order.getOrderno()).removeValue();
-        databaseReference.child("ORDERS").child("deleted")
+        databaseReference.child("ORDERS").child("completed")
                 .child(photocopy_order.getOrderno()).setValue(photocopy_order);
+        databaseReference.child("ORDERS").child("List")
+                .child(photocopy_order.getOrderno()).child("cusVis").setValue("false");
         progressBar.setVisibility(View.GONE);
-        cOrders.remove(ind);
-        notifyDataSetChanged();
         showSimplePopup("Message", "Your Order has been Deleted.");
 //        Orders.refresh();
     }

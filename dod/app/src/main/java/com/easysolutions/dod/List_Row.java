@@ -1,7 +1,7 @@
 package com.easysolutions.dod;
 
 public class List_Row {
-    String CusNo,ProNo,ProName,id,name,time,status;
+    String CusNo,ProNo,ProName,id,name,time,status,cusVis,proVis;
 
     public List_Row() {
     }
@@ -28,6 +28,22 @@ public class List_Row {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getProVis() {
+        return proVis;
+    }
+
+    public void setProVis(String proVis) {
+        this.proVis = proVis;
+    }
+
+    public String getCusVis() {
+        return cusVis;
+    }
+
+    public void setCusVis(String cusVis) {
+        this.cusVis = cusVis;
     }
 
     public List_Row(String cusNo, String proNo, String proName, String id, String name, String time, String status) {

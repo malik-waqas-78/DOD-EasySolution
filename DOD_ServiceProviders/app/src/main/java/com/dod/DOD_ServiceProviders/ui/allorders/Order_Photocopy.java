@@ -13,6 +13,61 @@ public class Order_Photocopy {
     String date;
     String orderno;
     String cusNo;
+    String name;
+    String type,proNo,bill;
+
+    public Order_Photocopy(String no_of_pages, String no_of_copiess, String page_sides, String pickup_point, String pickup_time, String extra_details, String current_time_milies, String status, String time, String date, String orderno, String cusNo, String name, String type, String proNo, String bill) {
+        this.no_of_pages = no_of_pages;
+        this.no_of_copiess = no_of_copiess;
+        this.page_sides = page_sides;
+        this.pickup_point = pickup_point;
+        this.pickup_time = pickup_time;
+        this.extra_details = extra_details;
+        this.current_time_milies = current_time_milies;
+        this.status = status;
+        this.time = time;
+        this.date = date;
+        this.orderno = orderno;
+        this.cusNo = cusNo;
+        this.name = name;
+        this.type = type;
+        this.proNo = proNo;
+        this.bill = bill;
+    }
+
+    public String getBill() {
+        return bill;
+    }
+
+    public void setBill(String bill) {
+        this.bill = bill;
+    }
+
+    public Order_Photocopy(String no_of_pages, String no_of_copiess, String page_sides, String pickup_point, String pickup_time, String extra_details, String current_time_milies, String status, String time, String date, String orderno, String cusNo, String name, String type, String proNo) {
+        this.no_of_pages = no_of_pages;
+        this.no_of_copiess = no_of_copiess;
+        this.page_sides = page_sides;
+        this.pickup_point = pickup_point;
+        this.pickup_time = pickup_time;
+        this.extra_details = extra_details;
+        this.current_time_milies = current_time_milies;
+        this.status = status;
+        this.time = time;
+        this.date = date;
+        this.orderno = orderno;
+        this.cusNo = cusNo;
+        this.name = name;
+        this.type = type;
+        this.proNo = proNo;
+    }
+
+    public String getProNo() {
+        return proNo;
+    }
+
+    public void setProNo(String proNo) {
+        this.proNo = proNo;
+    }
 
     public Order_Photocopy(String no_of_pages, String no_of_copiess, String page_sides, String pickup_point, String pickup_time, String extra_details, String current_time_milies, String status, String time, String date, String orderno, String cusNo, String name, String type) {
         this.no_of_pages = no_of_pages;
@@ -31,6 +86,9 @@ public class Order_Photocopy {
         this.type = type;
     }
 
+    public Order_Photocopy() {
+    }
+
     public String getCusNo() {
         return cusNo;
     }
@@ -46,10 +104,6 @@ public class Order_Photocopy {
     public void setName(String name) {
         this.name = name;
     }
-
-
-    String name;
-
 
     public String getCurrent_time_milies() {
         return current_time_milies;
@@ -97,14 +151,6 @@ public class Order_Photocopy {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-
-    String type;
-
-
-
-    public Order_Photocopy() {
     }
 
     public String getNo_of_pages() {
@@ -156,14 +202,13 @@ public class Order_Photocopy {
     }
 
 
-
-    public boolean validate_photcopyData(){
-        if(pickup_time==null&&no_of_copiess==null&&no_of_pages==null&&pickup_point==null&&
+    public boolean validate_photcopyData() {
+        if (pickup_time == null && no_of_copiess == null && no_of_pages == null && pickup_point == null &&
                 (pickup_time.equalsIgnoreCase("PickUp Time"))
-            &&(no_of_pages.isEmpty())&&(no_of_copiess.isEmpty())&&(pickup_point.isEmpty())
-        ){
+                && (no_of_pages.isEmpty()) && (no_of_copiess.isEmpty()) && (pickup_point.isEmpty())
+        ) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
